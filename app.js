@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initEstimator();
   initGallery();
   initFaq();
+  initMobileDrawer();
 });
 
 /* 1. Live IST Operating Status (9:00 AM - 4:00 PM IST) */
@@ -164,3 +165,52 @@ function initFaq() {
     });
   });
 }
+
+/* 6. Mobile Drawer Sidebar & Category Navigation */
+function initMobileDrawer() {
+  const toggleBtn = document.getElementById("menuToggleBtn");
+  const closeBtn = document.getElementById("drawerCloseBtn");
+  const overlay = document.getElementById("drawerOverlay");
+  const drawer = document.getElementById("mobileDrawer");
+
+  if (!drawer || !toggleBtn) return;
+
+  function openDrawer() {
+    drawer.classList.add("active");
+    if (overlay) overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("active");
+    if (overlay) overlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  toggleBtn.addEventListener("click", openDrawer);
+  if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+  if (overlay) overlay.addEventListener("click", closeDrawer);
+
+  // Close on link click and optionally pre-select treatment in estimator
+  document.querySelectorAll(".drawer-service-item, .drawer-cat-btn").forEach((link) => {
+    link.addEventListener("click", () => {
+      const treatment = link.getAttribute("data-treatment");
+      if (treatment) {
+        const sel = document.getElementById("treatmentSelect");
+        if (sel) {
+          sel.value = treatment;
+          sel.dispatchEvent(new Event("change"));
+        }
+      }
+      closeDrawer();
+    });
+  });
+
+  // Close on ESC key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drawer.classList.contains("active")) {
+      closeDrawer();
+    }
+  });
+}
+

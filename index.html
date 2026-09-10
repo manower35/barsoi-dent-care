@@ -84,6 +84,9 @@
         <a href="tel:+917631272422" class="btn btn-primary btn-sm" title="Call Doctor: +91 7631 272 422">
           <i class="fa-solid fa-phone"></i> <span class="nav-cta-text">Call</span>
         </a>
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open Navigation Menu" title="Open Services Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -695,6 +698,127 @@
       </div>
     </div>
   </footer>
+
+  <!-- Mobile Slide-Out Drawer / Sidebar -->
+  <div class="mobile-drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile Navigation Drawer">
+    <div class="drawer-header">
+      <div class="drawer-brand">
+        <div class="drawer-brand-icon">
+          <i class="fa-solid fa-tooth"></i>
+        </div>
+        <div class="drawer-brand-text">
+          <h4>BARSOI DENT CARE</h4>
+          <p>Dr. Musarrat Parveen</p>
+        </div>
+      </div>
+      <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Navigation Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Quick Category Navigation -->
+      <div>
+        <div class="drawer-section-title">
+          <i class="fa-solid fa-compass"></i>
+          <span>Quick Categories</span>
+        </div>
+        <div class="drawer-cat-nav">
+          <a href="#about" class="drawer-cat-btn"><i class="fa-solid fa-user-doctor"></i> Doctor Info</a>
+          <a href="#services" class="drawer-cat-btn"><i class="fa-solid fa-tooth"></i> Treatments</a>
+          <a href="#estimator" class="drawer-cat-btn"><i class="fa-solid fa-clock-rotate-left"></i> Sittings & Time</a>
+          <a href="#gallery" class="drawer-cat-btn"><i class="fa-solid fa-camera"></i> Clinic Photos</a>
+          <a href="#schedule" class="drawer-cat-btn"><i class="fa-solid fa-clock"></i> Timings</a>
+          <a href="#schedule" class="drawer-cat-btn"><i class="fa-solid fa-location-dot"></i> Maps & Route</a>
+        </div>
+      </div>
+
+      <!-- Concise Services List -->
+      <div>
+        <div class="drawer-section-title">
+          <i class="fa-solid fa-teeth-open"></i>
+          <span>All Dental Treatments</span>
+        </div>
+        <div class="drawer-services-list">
+          <a href="#estimator" class="drawer-service-item" data-treatment="rct">
+            <div class="drawer-item-left">
+              <div class="drawer-item-icon"><i class="fa-solid fa-tooth"></i></div>
+              <div class="drawer-item-info">
+                <h5>Root Canal Treatment (RCT)</h5>
+                <p>Save infected tooth, stop severe pain</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right drawer-item-arrow"></i>
+          </a>
+
+          <a href="#estimator" class="drawer-service-item" data-treatment="extraction">
+            <div class="drawer-item-left">
+              <div class="drawer-item-icon"><i class="fa-solid fa-hand-holding-medical"></i></div>
+              <div class="drawer-item-info">
+                <h5>Tooth Extraction</h5>
+                <p>Gentle, painless removal of damaged teeth</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right drawer-item-arrow"></i>
+          </a>
+
+          <a href="#estimator" class="drawer-service-item" data-treatment="scaling">
+            <div class="drawer-item-left">
+              <div class="drawer-item-icon"><i class="fa-solid fa-teeth"></i></div>
+              <div class="drawer-item-info">
+                <h5>Teeth Cleaning & Scaling</h5>
+                <p>Ultrasonic plaque, stain & tartar removal</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right drawer-item-arrow"></i>
+          </a>
+
+          <a href="#estimator" class="drawer-service-item" data-treatment="filling">
+            <div class="drawer-item-left">
+              <div class="drawer-item-icon"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="drawer-item-info">
+                <h5>Cavity Dental Filling</h5>
+                <p>Durable tooth restoration & decay seal</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right drawer-item-arrow"></i>
+          </a>
+
+          <a href="#estimator" class="drawer-service-item" data-treatment="wiring">
+            <div class="drawer-item-left">
+              <div class="drawer-item-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div class="drawer-item-info">
+                <h5>Dental Wiring & Braces</h5>
+                <p>Straighten crooked or irregular teeth</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right drawer-item-arrow"></i>
+          </a>
+
+          <a href="#estimator" class="drawer-service-item" data-treatment="whitening">
+            <div class="drawer-item-left">
+              <div class="drawer-item-icon"><i class="fa-solid fa-gem"></i></div>
+              <div class="drawer-item-info">
+                <h5>Teeth Whitening & Polish</h5>
+                <p>Brighten yellow teeth & restore natural shine</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right drawer-item-arrow"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <a href="tel:+917631272422" class="btn btn-primary" style="width: 100%; justify-content: center;">
+        <i class="fa-solid fa-phone"></i> Call Doctor: +91 7631 272 422
+      </a>
+      <a href="https://wa.me/917631272422?text=Hello%20Dr.%20Musarrat%20Parveen,%20I%20am%20messaging%20from%20Barsoi%20Dent%20Care%20website." target="_blank" class="btn btn-whatsapp" style="width: 100%; justify-content: center;">
+        <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+      </a>
+    </div>
+  </aside>
 
   <!-- Scripts -->
   <script src="app.js"></script>
