@@ -19,6 +19,7 @@
     service: "",
     date: ""
   };
+  let lastSubmitTimestamp = 0;
 
   function initWidget() {
     const container = document.createElement("div");
@@ -77,8 +78,8 @@
         <!-- Footer Input -->
         <div class="wa-chat-footer">
           <form class="wa-input-box" onsubmit="event.preventDefault(); window.submitWaInput();">
-            <input type="text" id="waInputText" class="wa-input" placeholder="Type your message..." />
-            <button type="submit" class="btn btn-whatsapp btn-sm" style="padding: 0 14px; border-radius: 50%;">
+            <input type="text" id="waInputText" class="wa-input" placeholder="Type your message..." maxlength="200" autocomplete="off" />
+            <button type="submit" class="btn btn-whatsapp btn-sm" style="padding: 0 14px; border-radius: 50%;" aria-label="Send Message">
               <i class="fa-solid fa-paper-plane"></i>
             </button>
           </form>
@@ -119,12 +120,24 @@
     return `${h}:${m} ${ampm}`;
   }
 
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function addBubble(type, text, extraHtml = "") {
     const body = document.getElementById("waChatBody");
+    if (!body) return;
     const div = document.createElement("div");
     div.className = `wa-bubble ${type === "bot" ? "wa-bubble-bot" : "wa-bubble-user"}`;
+    const safeText = type === "user" ? escapeHtml(text) : text;
     div.innerHTML = `
-      ${text}
+      ${safeText}
       ${extraHtml}
       <div class="wa-time">${getFormattedTime()}</div>
     `;
@@ -162,7 +175,7 @@
           Connect directly on WhatsApp for an exact estimate:`,
           `
           <div style="margin-top:10px;">
-            <a href="https://wa.me/${CLINIC_WHATSAPP}?text=${encodeURIComponent("Hello Dr. Musarrat Parveen, I would like to inquire about treatment fees at Barsoi Dent Care Clinic.")}" target="_blank" class="btn btn-whatsapp btn-sm" style="width:100%;">
+            <a href="https://wa.me/${CLINIC_WHATSAPP}?text=${encodeURIComponent("Hello Dr. Musarrat Parveen, I would like to inquire about treatment fees at Barsoi Dent Care Clinic.")}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm" style="width:100%;">
               <i class="fa-brands fa-whatsapp"></i> Chat for Quote (${CLINIC_PHONE_DISPLAY})
             </a>
           </div>
@@ -176,7 +189,7 @@
           Rinse with warm water. Avoid extreme hot or cold foods. Dr. Musarrat Parveen prioritizes urgent dental pain consultations during clinic hours (9 AM – 4 PM).`,
           `
           <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
-            <a href="https://wa.me/${CLINIC_WHATSAPP}?text=${encodeURIComponent("URGENT: Hello Dr. Musarrat Parveen, I have severe tooth pain and need an appointment at Barsoi Dent Care Clinic.")}" target="_blank" class="btn btn-whatsapp btn-sm" style="width:100%;">
+            <a href="https://wa.me/${CLINIC_WHATSAPP}?text=${encodeURIComponent("URGENT: Hello Dr. Musarrat Parveen, I have severe tooth pain and need an appointment at Barsoi Dent Care Clinic.")}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm" style="width:100%;">
               <i class="fa-brands fa-whatsapp"></i> Send Urgent WhatsApp
             </a>
             <a href="tel:+${CLINIC_WHATSAPP}" class="btn btn-outline btn-sm" style="width:100%;">
@@ -196,13 +209,13 @@
           • <strong>Phone:</strong> ${CLINIC_PHONE_DISPLAY}`,
           `
           <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
-            <a href="https://www.google.com/maps/dir/?api=1&destination=25.6195096,87.9281977" target="_blank" class="btn btn-outline btn-sm" style="width:100%;">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=25.6195096,87.9281977" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="width:100%;">
               <i class="fa-solid fa-location-dot"></i> Open Google Maps Directions
             </a>
-            <a href="https://www.google.com/search?q=barsoi+dent+care+clinic+photos" target="_blank" class="btn btn-outline btn-sm" style="width:100%;">
+            <a href="https://www.google.com/search?q=barsoi+dent+care+clinic+photos" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="width:100%;">
               <i class="fa-brands fa-google" style="color:#ea4335;"></i> Google Reviews & Photos
             </a>
-            <a href="https://www.facebook.com/search/top?q=Barsoi%20Dent%20Care%20Clinic" target="_blank" class="btn btn-outline btn-sm" style="width:100%;">
+            <a href="https://www.facebook.com/search/top?q=Barsoi%20Dent%20Care%20Clinic" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="width:100%;">
               <i class="fa-brands fa-facebook" style="color:#1877f2;"></i> Facebook Page
             </a>
           </div>
@@ -250,7 +263,15 @@
 
   window.submitWaInput = function () {
     const input = document.getElementById("waInputText");
-    const val = input.value.trim();
+    if (!input) return;
+
+    // Anti-spam rate limiting protection
+    const now = Date.now();
+    if (now - lastSubmitTimestamp < 600) return;
+    lastSubmitTimestamp = now;
+
+    // String length boundary protection
+    const val = input.value.trim().substring(0, 200);
     if (!val) return;
 
     addBubble("user", val);
@@ -276,7 +297,7 @@
             `Forwarding your message to <strong>${DOCTOR_NAME}</strong>:`,
             `
             <div style="margin-top:8px;">
-              <a href="https://wa.me/${CLINIC_WHATSAPP}?text=${encodeURIComponent(directMsg)}" target="_blank" class="btn btn-whatsapp btn-sm" style="width:100%;">
+              <a href="https://wa.me/${CLINIC_WHATSAPP}?text=${encodeURIComponent(directMsg)}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm" style="width:100%;">
                 <i class="fa-brands fa-whatsapp"></i> Send to WhatsApp (${CLINIC_PHONE_DISPLAY})
               </a>
             </div>
@@ -289,9 +310,9 @@
   };
 
   function finishBooking() {
-    const name = bookingData.patientName || "Patient";
-    const srv = bookingData.service || "Consultation";
-    const slot = bookingData.date || "Next Available Slot";
+    const name = escapeHtml(bookingData.patientName || "Patient").substring(0, 50);
+    const srv = escapeHtml(bookingData.service || "Consultation").substring(0, 60);
+    const slot = escapeHtml(bookingData.date || "Next Available Slot").substring(0, 60);
 
     const msg = `Hello Dr. Musarrat Parveen,%0A%0AI would like to book a dental appointment at *Barsoi Dent Care Clinic*:%0A• *Patient Name:* ${encodeURIComponent(name)}%0A• *Treatment:* ${encodeURIComponent(srv)}%0A• *Preferred Slot:* ${encodeURIComponent(slot)}%0A• *Clinic:* SH98, Neemtala Chowk, Barsoi%0A%0APlease confirm my appointment. Thank you!`;
 
@@ -306,7 +327,7 @@
       Click below to send this directly to ${DOCTOR_NAME}:`,
       `
       <div style="margin-top:10px;">
-        <a href="${waUrl}" target="_blank" class="btn btn-whatsapp" style="width:100%; font-size:0.92rem;">
+        <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp" style="width:100%; font-size:0.92rem;">
           <i class="fa-brands fa-whatsapp"></i> Confirm on WhatsApp Now
         </a>
       </div>

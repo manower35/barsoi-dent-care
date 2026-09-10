@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGallery();
   initFaq();
   initMobileDrawer();
+  initImageProtection();
 });
 
 /* 1. Live IST Operating Status (9:00 AM - 4:00 PM IST) */
@@ -213,4 +214,21 @@ function initMobileDrawer() {
     }
   });
 }
+
+/* 7. Protection Layer: Image Fallback & Runtime Error Guard */
+window.addEventListener("error", (e) => {
+  console.warn("Clinic UI guarded against runtime exception:", e.message);
+});
+
+function initImageProtection() {
+  document.querySelectorAll("img").forEach((img) => {
+    img.addEventListener("error", function () {
+      this.onerror = null;
+      this.src =
+        "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22400%22%20viewBox%3D%220%200%20600%20400%22%3E%3Crect%20fill%3D%22%23f1f5f9%22%20width%3D%22600%22%20height%3D%22400%22%2F%3E%3Ctext%20fill%3D%22%230284c7%22%20font-family%3D%22sans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2248%25%22%20text-anchor%3D%22middle%22%3EBarsoi%20Dent%20Care%20Clinic%3C%2Ftext%3E%3Ctext%20fill%3D%22%2364748b%22%20font-family%3D%22sans-serif%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2255%25%22%20text-anchor%3D%22middle%22%3EDr.%20Musarrat%20Parveen%20%E2%80%A2%20Barsoi%2C%20Katihar%3C%2Ftext%3E%3C%2Fsvg%3E";
+      this.alt = "Barsoi Dent Care Clinic - Dr. Musarrat Parveen";
+    });
+  });
+}
+
 
